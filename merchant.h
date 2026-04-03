@@ -1,0 +1,36 @@
+#ifndef MERCHANT_H
+#define MERCHANT_H
+
+#include <vector>
+#include "packet.h"
+
+class Merchant {
+    private:
+        connState state;
+        std::string globalMasterKey;
+        std::string challenge;
+        std::string secretKey;
+        int merchantID;
+        int seqNum;
+        int ackNum;
+        bool SYN;
+        bool ACK;
+    public:
+        Merchant(int id);
+        int generateSYN();
+        bool setACK(int seqNum, int ackNum);
+        std::vector<int> returnSYN_ACK();
+        bool setSYN(int seqNum);
+        int returnACK();
+        bool setSYN_ACK(int seqNum, int ackNum);
+        std::vector<bool> getFlags();
+        std::vector<int> getNum();
+        Header sendSYN();
+        Header receiveACKAndSendSYN_ACK(int seqNum, int ackNum);
+        Header receiveSYNAndSendACK(int seqNum);
+        Header receiveSYN_ACK(int seqNum, int ackNum);
+        Packet validatePacketAndgenerateChallenge(int seqNum, std::string userID);
+        Packet authenticateUser(int seqNum, std::string decryptedChallenge);
+};
+
+#endif
